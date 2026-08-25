@@ -1,0 +1,12 @@
+[
+  { "name": "Alice Johnson", "phone": "0412345678", "email": "alice.johnson@example.com", "dob": "1990-05-14", "password": "password123", "role": "member" },
+  { "name": "Bob Smith", "phone": "0412345679", "email": "bob.smith@example.com", "dob": "1985-11-22", "password": "securePass456", "role": "instructor" },
+  { "name": "Carol Davis", "phone": "0412345680", "email": "carol.davis@example.com", "dob": "1992-07-30", "password": "myPass789", "role": "member" },
+  { "name": "David Lee", "phone": "0412345681", "email": "david.lee@example.com", "dob": "1988-01-15", "password": "david1234", "role": "instructor" },
+  { "name": "Emma Wilson", "phone": "0412345682", "email": "emma.wilson@example.com", "dob": "1995-03-10", "password": "emmaPass567", "role": "member" },
+  { "name": "Frank Miller", "phone": "0412345683", "email": "frank.miller@example.com", "dob": "1983-09-25", "password": "frankSecure890", "role": "instructor" },
+  { "name": "Grace Brown", "phone": "0412345684", "email": "grace.brown@example.com", "dob": "1991-12-05", "password": "gracePass321", "role": "member" },
+  { "name": "Henry Clark", "phone": "0412345685", "email": "henry.clark@example.com", "dob": "1987-06-18", "password": "henryPwd654", "role": "instructor" },
+  { "name": "Isabella Martinez", "phone": "0412345686", "email": "isabella.martinez@example.com", "dob": "1993-08-12", "password": "bellaPass987", "role": "member" },
+  { "name": "Jack Harris", "phone": "0412345687", "email": "jack.harris@example.com", "dob": "1984-04-20", "password": "jackSecure123", "role": "instructor" }
+]
