@@ -17,6 +17,7 @@ export const getClasses = async (req: AuthenticatedRequest, res: Response): Prom
   }
 };
 
+// Epic 3: Instructor Class Management
 const requireInstructor = (req: AuthenticatedRequest, res: Response): string | null => {
   if (!req.user) { res.status(401).json({ message: 'Not authorized' }); return null; }
   if (req.user.role !== 'instructor') { res.status(403).json({ message: 'Instructor access required' }); return null; }

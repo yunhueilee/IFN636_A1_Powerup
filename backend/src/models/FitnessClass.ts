@@ -18,6 +18,7 @@ export interface IFitnessClass extends Document {
   cancellationReason?: string;
 }
 
+// Epic 3: Instructor Class Management
 const fitnessClassSchema = new Schema<IFitnessClass>(
   {
     title: { type: String, required: true, trim: true },
