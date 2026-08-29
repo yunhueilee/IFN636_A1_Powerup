@@ -10,10 +10,10 @@ import { useAuth } from '../store';
 const Tab = createBottomTabNavigator();
 
 const TAB_ICONS: Record<string, string> = {
-  AvailableClasses: '🏋️',
+  AvailableClasses: '📦',
   BookedClasses: '🗓️',
   Profile: '👤',
-  ClassManagement: '📋',
+  ClassManagement: '📦',
 };
 
 const AppNavigator = () => {
@@ -31,11 +31,11 @@ const AppNavigator = () => {
       })}
     >
       {isInstructor ? (
-        <Tab.Screen name="ClassManagement" component={InstructorClassManagementScreen} options={{ tabBarLabel: 'Class Management' }} />
+        <Tab.Screen name="ClassManagement" component={InstructorClassManagementScreen} options={{ tabBarLabel: 'Item Management' }} />
       ) : (
         <>
-          <Tab.Screen name="AvailableClasses" component={HomeScreen} options={{ tabBarLabel: 'Available Classes' }} />
-          <Tab.Screen name="BookedClasses" component={BookingsScreen} options={{ tabBarLabel: 'Booked Classes' }} />
+          <Tab.Screen name="AvailableClasses" component={HomeScreen} options={{ tabBarLabel: 'Available Items' }} />
+          <Tab.Screen name="BookedClasses" component={BookingsScreen} options={{ tabBarLabel: 'Booked Items' }} />
         </>
       )}
       <Tab.Screen name="Profile" component={ProfileScreen} />

@@ -27,7 +27,7 @@ const HomeScreen = () => {
         const data = await getClasses(token);
         setClasses(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unable to load classes');
+        setError(err instanceof Error ? err.message : 'Unable to load items');
       } finally {
         isRefresh ? setRefreshing(false) : setIsLoading(false);
       }
@@ -52,7 +52,7 @@ const HomeScreen = () => {
       await bookClass(token, classId);
       await fetchClasses(true);
     } catch (err) {
-      Alert.alert('Booking failed', err instanceof Error ? err.message : 'Unable to book class');
+      Alert.alert('Booking failed', err instanceof Error ? err.message : 'Unable to book item');
     } finally {
       setProcessingClassId(null);
     }
@@ -73,10 +73,10 @@ const HomeScreen = () => {
 
   const emptyMessage =
     user?.role === 'instructor'
-      ? 'You have no assigned classes yet.'
-      : 'No classes are available to book right now.';
+      ? 'You have no items yet.'
+      : 'No items are available to book right now.';
 
-  // Booked classes belong in the Booked Classes tab, not Available Classes
+  // Booked items belong in the Booked Items tab, not Available Items
   const availableClasses =
     user?.role === 'member' ? classes.filter((fitnessClass) => !fitnessClass.isBooked) : classes;
 

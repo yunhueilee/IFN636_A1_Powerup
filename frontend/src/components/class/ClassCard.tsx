@@ -79,7 +79,7 @@ const ClassCard = ({
             <ActivityIndicator color="#ffffff" size="small" />
           ) : (
             <Text style={styles.buttonText}>
-              {fitnessClass.isBooked ? 'Cancel Booking' : isFull ? 'Class Full' : 'Book Class'}
+              {fitnessClass.isBooked ? 'Cancel Booking' : isFull ? 'Class Full' : 'Book Item'}
             </Text>
           )}
         </Pressable>
@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 14,
     fontWeight: '700',
+    textAlign: 'center',
   },
   actions: {
     flexDirection: 'row',
@@ -168,9 +169,12 @@ const styles = StyleSheet.create({
   actionButton: {
     flex: 1,
     minWidth: 0,
+    minHeight: 56,
     borderRadius: 10,
     paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   secondaryButton: {
     backgroundColor: '#8a2be2',
