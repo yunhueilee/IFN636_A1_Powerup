@@ -53,16 +53,17 @@ const ClassCard = ({
     <View style={[styles.card, isEditing && styles.editingCard]}>
       <Text style={styles.title}>{fitnessClass.title}</Text>
       {fitnessClass.status === 'cancelled' && (
-        <Text style={styles.cancelled}>Class Cancelled{fitnessClass.cancellationReason ? `: ${fitnessClass.cancellationReason}` : ''}</Text>
+        <Text style={styles.cancelled}>Item Cancelled{fitnessClass.cancellationReason ? `: ${fitnessClass.cancellationReason}` : ''}</Text>
       )}
       <Text style={styles.meta}>{formatDate(fitnessClass.scheduledAt)}</Text>
       <Text style={styles.meta}>{formatTimeRange(fitnessClass.scheduledAt, fitnessClass.durationMinutes)}</Text>
       {!!fitnessClass.location && <Text style={styles.meta}>{fitnessClass.location}</Text>}
-      {!!instructorName && <Text style={styles.meta}>Instructor: {instructorName}</Text>}
+      {!!instructorName && <Text style={styles.meta}>Sharer: {instructorName}</Text>}
       <Text style={styles.meta}>
         Available: {fitnessClass.bookedCount}/{fitnessClass.capacity}
       </Text>
-      <Text style={styles.meta}>Intensity: {renderStars(fitnessClass.intensity)}</Text>
+    
+      {/* <Text style={styles.meta}>Intensity: {renderStars(fitnessClass.intensity)}</Text> */}
       {!!fitnessClass.description && <Text style={styles.description}>{fitnessClass.description}</Text>}
 
       {canBook && fitnessClass.status !== 'cancelled' && (
@@ -86,7 +87,7 @@ const ClassCard = ({
       {!!onViewMembers && (
         <View style={styles.actions}>
           <Pressable style={[styles.actionButton, styles.secondaryButton]} onPress={onViewMembers}>
-            <Text style={styles.buttonText}>View Members</Text>
+            <Text style={styles.buttonText}>View Recipients</Text>
           </Pressable>
           {fitnessClass.status === 'active' && (
             <Pressable style={[styles.actionButton, styles.secondaryButton]} onPress={onEdit}>

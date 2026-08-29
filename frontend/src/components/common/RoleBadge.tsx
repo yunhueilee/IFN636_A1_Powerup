@@ -7,8 +7,8 @@ interface RoleBadgeProps {
 }
 
 const ROLE_LABELS: Record<UserRole, string> = {
-  member: 'Member',
-  instructor: 'Instructor',
+  member: 'Recipient',
+  instructor: 'Sharer',
 };
 
 const RoleBadge = ({ role }: RoleBadgeProps) => (

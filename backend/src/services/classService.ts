@@ -24,17 +24,18 @@ export const attachAvailability = async (
 ): Promise<ClassWithAvailability[]> => {
   const classIds = classes.map((fitnessClass) => fitnessClass._id);
 
-  const counts = await Booking.aggregate<{ _id: unknown; count: number }>([
-    { $match: { fitnessClass: { $in: classIds }, status: 'booked' } },
-    { $group: { _id: '$fitnessClass', count: { $sum: 1 } } },
+  const [counts, myBookings] = await Promise.all([
+    Booking.aggregate<{ _id: unknown; count: number }>([
+      { $match: { fitnessClass: { $in: classIds }, status: 'booked' } },
+      { $group: { _id: '$fitnessClass', count: { $sum: 1 } } },
+    ]),
+    Booking.find({
+      user: userId,
+      status: 'booked',
+      fitnessClass: { $in: classIds },
+    }).select('fitnessClass'),
   ]);
   const countMap = new Map(counts.map((entry) => [entry._id?.toString(), entry.count]));
-
-  const myBookings = await Booking.find({
-    user: userId,
-    status: 'booked',
-    fitnessClass: { $in: classIds },
-  }).select('fitnessClass');
   const bookedSet = new Set(myBookings.map((booking) => booking.fitnessClass.toString()));
 
   return classes.map((fitnessClass) => {
