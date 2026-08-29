@@ -66,10 +66,10 @@ const LoginScreen = () => {
 
           <View style={styles.formSection}>
             <Text style={styles.heading}>Log In</Text>
-            <Text style={styles.subheading}>Welcome to PowerUp !</Text>
+            <Text style={styles.subheading}>Welcome to PowerUp Community Source Sharing!</Text>
 
             <View style={styles.inputRow}>
-              <Text style={styles.icon}>◔</Text>
+              <Text style={styles.icon}>📞</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Phone number"
@@ -84,7 +84,7 @@ const LoginScreen = () => {
             </View>
 
             <View style={styles.inputRow}>
-              <Text style={styles.icon}>◒</Text>
+              <Text style={styles.icon}>🔑</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Password"
@@ -96,7 +96,7 @@ const LoginScreen = () => {
                 onSubmitEditing={Keyboard.dismiss}
               />
               <Pressable onPress={() => setShowPassword((prev) => !prev)} style={styles.eyeButton}>
-                <Text style={styles.eyeIcon}>{showPassword ? '◉' : '◌'}</Text>
+                <Text style={styles.eyeIcon}>{showPassword ? '🙈' : '👁️'}</Text>
               </Pressable>
             </View>
 
