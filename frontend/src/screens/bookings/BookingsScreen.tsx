@@ -61,7 +61,7 @@ const BookingsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Booked Classes</Text>
+      <Text style={styles.header}>Booked Items</Text>
 
       {isLoading ? (
         <LoadingState message="Loading bookings…" />
@@ -70,7 +70,7 @@ const BookingsScreen = () => {
       ) : (
         <ClassList
           classes={bookedClasses}
-          emptyMessage="You haven't booked any classes yet."
+          emptyMessage="You haven't booked any items yet."
           refreshing={refreshing}
           onRefresh={() => fetchBookings(true)}
           canBook

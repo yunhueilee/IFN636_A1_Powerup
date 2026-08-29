@@ -5,6 +5,8 @@ import { useAuth } from '../../store';
 import { cancelClass, ClassPayload, createClass, getClassMembers, getClasses, updateClass } from '../../services/api/classService';
 import { ClassMember, FitnessClass } from '../../types';
 import ClassList from '../../components/class/ClassList';
+import WelcomeSection from '../../components/common/WelcomeSection';
+import RoleBadge from '../../components/common/RoleBadge';
 
 interface FormState {
   title: string;
@@ -54,7 +56,7 @@ const toDateTime = (date: string, time: string): Date => {
 };
 
 const InstructorClassManagementScreen = () => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [classes, setClasses] = useState<FitnessClass[]>([]);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [editing, setEditing] = useState<FitnessClass | null>(null);
@@ -164,9 +166,15 @@ const InstructorClassManagementScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {!!user && (
+        <>
+          <WelcomeSection name={user.name} />
+          <RoleBadge role={user.role} />
+        </>
+      )}
       <ClassList
         classes={classes}
-        emptyMessage="You have no assigned classes yet."
+        emptyMessage="You have no items yet."
         editingClassId={editing?._id}
         onViewMembers={showMembers}
         expandedClassId={expandedClassId}
@@ -185,7 +193,7 @@ const InstructorClassManagementScreen = () => {
         onCancelClass={setReasonClass}
         listHeader={(
           <>
-            <Text style={styles.header}>Class Management</Text>
+            <Text style={styles.header}>Item Management</Text>
             {error && <Text style={styles.error}>{error}</Text>}
           </>
         )}
@@ -207,10 +215,10 @@ const InstructorClassManagementScreen = () => {
             keyboardDismissMode="on-drag"
             contentContainerStyle={styles.formContent}
           >
-            <Text style={styles.formTitle}>{editing ? 'Edit Class' : 'Create New Class'}</Text>
-            <Text style={styles.fieldLabel}>Class Name</Text>
+            <Text style={styles.formTitle}>{editing ? 'Edit Item' : 'Create New Item'}</Text>
+            <Text style={styles.fieldLabel}>Item Name</Text>
             <TextInput style={styles.input} value={form.title} onChangeText={(value) => updateField('title', value)} returnKeyType="done" blurOnSubmit />
-            <Text style={styles.fieldLabel}>Date</Text>
+            <Text style={styles.fieldLabel}>Pickup Date</Text>
             <Pressable style={styles.selector} onPress={openDatePicker}><Text style={styles.selectorText}>{form.date || 'Select date'}</Text></Pressable>
             {datePickerVisible && <View style={styles.inlinePicker}>
               <View style={styles.calendarHeader}><Pressable onPress={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1))}><Text style={styles.monthButton}>‹</Text></Pressable><Text style={styles.monthTitle}>{calendarMonth.toLocaleDateString([], { month: 'long', year: 'numeric' })}</Text><Pressable onPress={() => setCalendarMonth(new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1))}><Text style={styles.monthButton}>›</Text></Pressable></View>
@@ -218,7 +226,7 @@ const InstructorClassManagementScreen = () => {
               <View style={styles.calendarGrid}>{calendarDays().map((day, index) => day ? <Pressable key={index} style={styles.dayButton} onPress={() => selectDate(day)}><Text style={styles.dayText}>{day}</Text></Pressable> : <View key={index} style={styles.dayButton} />)}</View>
               <Pressable onPress={closeDatePicker}><Text style={styles.dismiss}>Close Calendar</Text></Pressable>
             </View>}
-            <Text style={styles.fieldLabel}>Start Time</Text>
+            <Text style={styles.fieldLabel}>Opend Time</Text>
             <View style={timeStyles.timeInputRow}>
               <TextInput style={timeStyles.timeInput} value={form.startTime.replace(/\s(AM|PM)$/i, '').trim()} onChangeText={(value) => updateManualTime('startTime', value)} placeholder="HH:MM" keyboardType="numbers-and-punctuation" returnKeyType="done" blurOnSubmit />
               <View style={timeStyles.periodControl}>
@@ -226,7 +234,7 @@ const InstructorClassManagementScreen = () => {
                 {periodDropdownField === 'startTime' && <View style={timeStyles.periodDropdown}>{periods.map((period) => <Pressable key={period} style={timeStyles.periodDropdownOption} onPress={() => selectPeriod('startTime', period)}><Text style={styles.dropdownOptionText}>{period}</Text></Pressable>)}</View>}
               </View>
             </View>
-            <Text style={styles.fieldLabel}>End Time</Text>
+            <Text style={styles.fieldLabel}>Close Time</Text>
             <View style={timeStyles.timeInputRow}>
               <TextInput style={timeStyles.timeInput} value={form.endTime.replace(/\s(AM|PM)$/i, '').trim()} onChangeText={(value) => updateManualTime('endTime', value)} placeholder="HH:MM" keyboardType="numbers-and-punctuation" returnKeyType="done" blurOnSubmit />
               <View style={timeStyles.periodControl}>
@@ -238,8 +246,10 @@ const InstructorClassManagementScreen = () => {
             <TextInput style={styles.input} value={form.location} onChangeText={(value) => updateField('location', value)} returnKeyType="done" blurOnSubmit />
             <Text style={styles.fieldLabel}>Capacity</Text>
             <TextInput style={styles.input} value={form.capacity} onChangeText={(value) => updateField('capacity', value)} keyboardType="numeric" returnKeyType="done" blurOnSubmit />
-            <Text style={styles.fieldLabel}>Intensity (1-5)</Text>
-            <TextInput style={styles.input} value={form.intensity} onChangeText={(value) => updateField('intensity', value)} keyboardType="numeric" returnKeyType="done" blurOnSubmit />
+
+            {/* <Text style={styles.fieldLabel}>Intensity (1-5)</Text>
+            <TextInput style={styles.input} value={form.intensity} onChangeText={(value) => updateField('intensity', value)} keyboardType="numeric" returnKeyType="done" blurOnSubmit /> */}
+            
             <Text style={styles.fieldLabel}>Description</Text>
             <TextInput
               style={[styles.input, styles.descriptionInput]}
@@ -257,7 +267,7 @@ const InstructorClassManagementScreen = () => {
       </Modal>
 
       <Modal visible={!!reasonClass} transparent animationType="fade" onRequestClose={() => setReasonClass(null)}>
-        <View style={styles.overlay}><View style={styles.modal}><Text style={styles.formTitle}>Cancel Class</Text><Text style={styles.meta}>A reason is required and will be shown to booked members.</Text><TextInput style={styles.input} placeholder="Cancellation reason" value={reason} onChangeText={setReason} multiline /><Pressable style={styles.cancelButton} onPress={submitCancellation}><Text style={styles.buttonText}>Confirm Cancellation</Text></Pressable><Pressable onPress={() => setReasonClass(null)}><Text style={styles.dismiss}>Keep Class</Text></Pressable></View></View>
+        <View style={styles.overlay}><View style={styles.modal}><Text style={styles.formTitle}>Cancel Item</Text><Text style={styles.meta}>A reason is required and will be shown to booked sharer.</Text><TextInput style={styles.input} placeholder="Cancellation reason" value={reason} onChangeText={setReason} multiline /><Pressable style={styles.cancelButton} onPress={submitCancellation}><Text style={styles.buttonText}>Confirm Cancellation</Text></Pressable><Pressable onPress={() => setReasonClass(null)}><Text style={styles.dismiss}>Keep Item</Text></Pressable></View></View>
       </Modal>
     </SafeAreaView>
   );
@@ -273,7 +283,7 @@ const timeStyles = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f7' }, content: { paddingBottom: 90 }, header: { fontSize: 22, fontWeight: '700', marginHorizontal: 20, marginTop: 12, marginBottom: 4 }, error: { color: '#b42318', marginHorizontal: 20, marginTop: 12, marginBottom: 4 }, buttonText: { color: '#fff', fontWeight: '700' }, createButton: { position: 'absolute', right: 16, bottom: 18, width: 52, height: 52, backgroundColor: '#2e9d50', borderRadius: 26, alignItems: 'center', justifyContent: 'center', zIndex: 2 }, createText: { color: '#fff', fontSize: 30, fontWeight: '400', lineHeight: 34 }, form: { backgroundColor: '#fff', borderRadius: 10, padding: 14, margin: 20, marginTop: 8 }, keyboardContainer: { flex: 1 }, formModal: { backgroundColor: '#fff', borderRadius: 14, padding: 18, maxHeight: '90%' }, formContent: { paddingBottom: 24 }, pickerModal: { backgroundColor: '#fff', borderRadius: 14, padding: 18, width: '100%' }, inlinePicker: { backgroundColor: '#f5f5f7', borderRadius: 8, padding: 10, marginTop: -4, marginBottom: 10, borderWidth: 1, borderColor: '#d0d0d5' }, formTitle: { fontSize: 18, fontWeight: '700', marginBottom: 10 }, fieldLabel: { color: '#333', fontSize: 13, fontWeight: '700', marginBottom: 4 }, input: { borderWidth: 1, borderColor: '#d0d0d5', borderRadius: 6, padding: 10, marginBottom: 10, minHeight: 42 }, selector: { borderWidth: 1, borderColor: '#d0d0d5', borderRadius: 6, padding: 12, marginBottom: 10 }, selectorText: { color: '#1d1d1f', fontSize: 15 }, descriptionInput: { minHeight: 80, textAlignVertical: 'top' }, saveButton: { backgroundColor: '#8a2be2', borderRadius: 6, padding: 12, alignItems: 'center', marginTop: 4 }, overlay: { flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.35)', padding: 20 }, modal: { backgroundColor: '#fff', borderRadius: 10, padding: 18 }, dismiss: { textAlign: 'center', color: '#333', fontWeight: '700', padding: 12 }, meta: { color: '#666', marginTop: 4 }, cancelButton: { backgroundColor: '#b42318', borderRadius: 6, padding: 9 }, memberSection: { backgroundColor: '#fff', marginHorizontal: 20, marginTop: -8, marginBottom: 12, padding: 14, borderTopWidth: 1, borderTopColor: '#e5e5ea', borderRadius: 0 }, memberHeading: { fontSize: 14, fontWeight: '700', color: '#333', marginBottom: 8 }, memberRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#eee' }, memberName: { fontSize: 14, fontWeight: '600', color: '#1d1d1f' }, memberStatus: { color: '#2e7d32', fontSize: 12, fontWeight: '700' }, calendarHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }, monthTitle: { fontSize: 16, fontWeight: '700' }, monthButton: { fontSize: 28, color: '#8a2be2', paddingHorizontal: 12 }, weekRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 6 }, weekDay: { width: '14.28%', textAlign: 'center', color: '#666', fontSize: 12 }, calendarGrid: { flexDirection: 'row', flexWrap: 'wrap' }, dayButton: { width: '14.28%', height: 40, alignItems: 'center', justifyContent: 'center' }, dayText: { color: '#1d1d1f', fontSize: 15 }, dropdownGroup: { marginBottom: 10 }, dropdownButton: { minHeight: 44, borderWidth: 1, borderColor: '#d0d0d5', borderRadius: 6, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, dropdownText: { color: '#1d1d1f', fontSize: 16 }, dropdownArrow: { color: '#8a2be2', fontSize: 18 }, dropdownList: { maxHeight: 150, borderWidth: 1, borderColor: '#d0d0d5', borderRadius: 6, marginTop: 4, backgroundColor: '#fff' }, dropdownOption: { minHeight: 40, paddingHorizontal: 12, justifyContent: 'center' }, selectedDropdownOption: { backgroundColor: '#f0e6ff' }, dropdownOptionText: { color: '#1d1d1f', fontSize: 15 },
+  container: { flex: 1, backgroundColor: '#f5f5f7', paddingTop: 12 }, content: { paddingBottom: 90 }, header: { fontSize: 22, fontWeight: '700', marginHorizontal: 20, marginTop: 12, marginBottom: 4 }, error: { color: '#b42318', marginHorizontal: 20, marginTop: 12, marginBottom: 4 }, buttonText: { color: '#fff', fontWeight: '700' }, createButton: { position: 'absolute', right: 16, bottom: 18, width: 52, height: 52, backgroundColor: '#2e9d50', borderRadius: 26, alignItems: 'center', justifyContent: 'center', zIndex: 2 }, createText: { color: '#fff', fontSize: 30, fontWeight: '400', lineHeight: 34 }, form: { backgroundColor: '#fff', borderRadius: 10, padding: 14, margin: 20, marginTop: 8 }, keyboardContainer: { flex: 1 }, formModal: { backgroundColor: '#fff', borderRadius: 14, padding: 18, maxHeight: '90%' }, formContent: { paddingBottom: 24 }, pickerModal: { backgroundColor: '#fff', borderRadius: 14, padding: 18, width: '100%' }, inlinePicker: { backgroundColor: '#f5f5f7', borderRadius: 8, padding: 10, marginTop: -4, marginBottom: 10, borderWidth: 1, borderColor: '#d0d0d5' }, formTitle: { fontSize: 18, fontWeight: '700', marginBottom: 10 }, fieldLabel: { color: '#333', fontSize: 13, fontWeight: '700', marginBottom: 4 }, input: { borderWidth: 1, borderColor: '#d0d0d5', borderRadius: 6, padding: 10, marginBottom: 10, minHeight: 42 }, selector: { borderWidth: 1, borderColor: '#d0d0d5', borderRadius: 6, padding: 12, marginBottom: 10 }, selectorText: { color: '#1d1d1f', fontSize: 15 }, descriptionInput: { minHeight: 80, textAlignVertical: 'top' }, saveButton: { backgroundColor: '#8a2be2', borderRadius: 6, padding: 12, alignItems: 'center', marginTop: 4 }, overlay: { flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.35)', padding: 20 }, modal: { backgroundColor: '#fff', borderRadius: 10, padding: 18 }, dismiss: { textAlign: 'center', color: '#333', fontWeight: '700', padding: 12 }, meta: { color: '#666', marginTop: 4 }, cancelButton: { backgroundColor: '#b42318', borderRadius: 6, padding: 9 }, memberSection: { backgroundColor: '#fff', marginHorizontal: 20, marginTop: -8, marginBottom: 12, padding: 14, borderTopWidth: 1, borderTopColor: '#e5e5ea', borderRadius: 0 }, memberHeading: { fontSize: 14, fontWeight: '700', color: '#333', marginBottom: 8 }, memberRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#eee' }, memberName: { fontSize: 14, fontWeight: '600', color: '#1d1d1f' }, memberStatus: { color: '#2e7d32', fontSize: 12, fontWeight: '700' }, calendarHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }, monthTitle: { fontSize: 16, fontWeight: '700' }, monthButton: { fontSize: 28, color: '#8a2be2', paddingHorizontal: 12 }, weekRow: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 6 }, weekDay: { width: '14.28%', textAlign: 'center', color: '#666', fontSize: 12 }, calendarGrid: { flexDirection: 'row', flexWrap: 'wrap' }, dayButton: { width: '14.28%', height: 40, alignItems: 'center', justifyContent: 'center' }, dayText: { color: '#1d1d1f', fontSize: 15 }, dropdownGroup: { marginBottom: 10 }, dropdownButton: { minHeight: 44, borderWidth: 1, borderColor: '#d0d0d5', borderRadius: 6, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, dropdownText: { color: '#1d1d1f', fontSize: 16 }, dropdownArrow: { color: '#8a2be2', fontSize: 18 }, dropdownList: { maxHeight: 150, borderWidth: 1, borderColor: '#d0d0d5', borderRadius: 6, marginTop: 4, backgroundColor: '#fff' }, dropdownOption: { minHeight: 40, paddingHorizontal: 12, justifyContent: 'center' }, selectedDropdownOption: { backgroundColor: '#f0e6ff' }, dropdownOptionText: { color: '#1d1d1f', fontSize: 15 },
 });
 
 export default InstructorClassManagementScreen;
