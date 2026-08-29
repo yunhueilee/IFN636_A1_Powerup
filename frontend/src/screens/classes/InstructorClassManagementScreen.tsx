@@ -75,7 +75,7 @@ const InstructorClassManagementScreen = () => {
   const loadClasses = useCallback(async () => {
     if (!token) return;
     try { setClasses(await getClasses(token)); setError(null); }
-    catch (err) { setError(err instanceof Error ? err.message : 'Unable to load classes'); }
+    catch (err) { setError(err instanceof Error ? err.message : 'Unable to load items'); }
   }, [token]);
 
   useFocusEffect(useCallback(() => { loadClasses(); }, [loadClasses]));
@@ -141,7 +141,7 @@ const InstructorClassManagementScreen = () => {
       if (editing) await updateClass(token, editing._id, payload);
       else await createClass(token, payload);
       setEditing(null); setForm(emptyForm); setFormVisible(false); setError(null); await loadClasses();
-    } catch (err) { setError(err instanceof Error ? err.message : 'Unable to save class'); }
+    } catch (err) { setError(err instanceof Error ? err.message : 'Unable to save item'); }
   };
 
   const showMembers = async (fitnessClass: FitnessClass) => {
@@ -161,7 +161,7 @@ const InstructorClassManagementScreen = () => {
     if (!token || !reasonClass) return;
     if (!reason.trim()) { Alert.alert('Reason required', 'Enter a cancellation reason before continuing.'); return; }
     try { await cancelClass(token, reasonClass._id, reason); setReasonClass(null); setReason(''); await loadClasses(); }
-    catch (err) { Alert.alert('Cancellation failed', err instanceof Error ? err.message : 'Unable to cancel class'); }
+    catch (err) { Alert.alert('Cancellation failed', err instanceof Error ? err.message : 'Unable to cancel item'); }
   };
 
   return (
@@ -180,7 +180,7 @@ const InstructorClassManagementScreen = () => {
         expandedClassId={expandedClassId}
         expandedContent={(
           <View style={styles.memberSection}>
-            <Text style={styles.memberHeading}>Booked Members</Text>
+            <Text style={styles.memberHeading}>Booked Items</Text>
             {membersLoading ? <Text style={styles.meta}>Loading members...</Text> : members.length === 0 ? <Text style={styles.meta}>No active bookings.</Text> : members.map((member) => (
               <View key={member._id} style={styles.memberRow}>
                 <View><Text style={styles.memberName}>{member.user.name}</Text><Text style={styles.meta}>{member.user.phone}</Text></View>
@@ -267,7 +267,7 @@ const InstructorClassManagementScreen = () => {
       </Modal>
 
       <Modal visible={!!reasonClass} transparent animationType="fade" onRequestClose={() => setReasonClass(null)}>
-        <View style={styles.overlay}><View style={styles.modal}><Text style={styles.formTitle}>Cancel Item</Text><Text style={styles.meta}>A reason is required and will be shown to booked sharer.</Text><TextInput style={styles.input} placeholder="Cancellation reason" value={reason} onChangeText={setReason} multiline /><Pressable style={styles.cancelButton} onPress={submitCancellation}><Text style={styles.buttonText}>Confirm Cancellation</Text></Pressable><Pressable onPress={() => setReasonClass(null)}><Text style={styles.dismiss}>Keep Item</Text></Pressable></View></View>
+        <View style={styles.overlay}><View style={styles.modal}><Text style={styles.formTitle}>Cancel Item</Text><Text style={styles.meta}>A reason is required and will be shown to booked recipient.</Text><TextInput style={styles.input} placeholder="Cancellation reason" value={reason} onChangeText={setReason} multiline /><Pressable style={styles.cancelButton} onPress={submitCancellation}><Text style={styles.buttonText}>Confirm Cancellation</Text></Pressable><Pressable onPress={() => setReasonClass(null)}><Text style={styles.dismiss}>Keep Item</Text></Pressable></View></View>
       </Modal>
     </SafeAreaView>
   );

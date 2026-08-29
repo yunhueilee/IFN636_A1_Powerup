@@ -6,7 +6,7 @@ export const getClasses = async (token: string): Promise<FitnessClass[]> => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'Unable to load classes');
+    throw new Error(data.message || 'Unable to load items');
   }
 
   return data.classes;
@@ -20,7 +20,7 @@ export const bookClass = async (token: string, classId: string): Promise<void> =
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'Unable to book class');
+    throw new Error(data.message || 'Unable to book items');
   }
 };
 
@@ -47,7 +47,7 @@ export interface ClassPayload {
 
 const readClassResponse = async (response: Response): Promise<FitnessClass> => {
   const data = await response.json();
-  if (!response.ok) throw new Error(data.message || 'Unable to save class');
+  if (!response.ok) throw new Error(data.message || 'Unable to save item');
   return data.class;
 };
 
@@ -63,12 +63,12 @@ export const cancelClass = async (token: string, classId: string, reason: string
     body: JSON.stringify({ reason }),
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.message || 'Unable to cancel class');
+  if (!response.ok) throw new Error(data.message || 'Unable to cancel item');
 };
 
 export const getClassMembers = async (token: string, classId: string): Promise<ClassMember[]> => {
   const response = await authorizedFetch(`/classes/${classId}/members`, token);
   const data = await response.json();
-  if (!response.ok) throw new Error(data.message || 'Unable to load members');
+  if (!response.ok) throw new Error(data.message || 'Unable to load recipients');
   return data.members;
 };

@@ -26,7 +26,7 @@ const BookingsScreen = () => {
         const data = await getMyBookings(token);
         setBookings(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unable to load bookings');
+        setError(err instanceof Error ? err.message : 'Unable to load items');
       } finally {
         isRefresh ? setRefreshing(false) : setIsLoading(false);
       }
