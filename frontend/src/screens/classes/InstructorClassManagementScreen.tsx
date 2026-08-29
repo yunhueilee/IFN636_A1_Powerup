@@ -180,8 +180,8 @@ const InstructorClassManagementScreen = () => {
         expandedClassId={expandedClassId}
         expandedContent={(
           <View style={styles.memberSection}>
-            <Text style={styles.memberHeading}>Booked Items</Text>
-            {membersLoading ? <Text style={styles.meta}>Loading members...</Text> : members.length === 0 ? <Text style={styles.meta}>No active bookings.</Text> : members.map((member) => (
+            <Text style={styles.memberHeading}>Booked Recipients</Text>
+            {membersLoading ? <Text style={styles.meta}>Loading Recipients...</Text> : members.length === 0 ? <Text style={styles.meta}>No active bookings.</Text> : members.map((member) => (
               <View key={member._id} style={styles.memberRow}>
                 <View><Text style={styles.memberName}>{member.user.name}</Text><Text style={styles.meta}>{member.user.phone}</Text></View>
                 <Text style={styles.memberStatus}>{member.status}</Text>
