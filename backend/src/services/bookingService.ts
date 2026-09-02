@@ -24,19 +24,19 @@ const bookClassWithSession = async (
 ): Promise<IBooking> => {
   const fitnessClass = await FitnessClass.findOne({ _id: classId, status: 'active' }).session(session ?? null);
   if (!fitnessClass) {
-    throw new BookingError('Class not found', 404);
+    throw new BookingError('Item not found', 404);
   }
 
   const existing = await Booking.findOne({ user: userId, fitnessClass: classId }).session(session ?? null);
   if (existing && existing.status === 'booked') {
-    throw new BookingError('You have already booked this class', 409);
+    throw new BookingError('You have already booked this item', 409);
   }
 
   const activeCount = await Booking.countDocuments({ fitnessClass: classId, status: 'booked' }).session(
     session ?? null
   );
   if (activeCount >= fitnessClass.capacity) {
-    throw new BookingError('This class is full', 409);
+    throw new BookingError('This item is full', 409);
   }
 
   if (existing) {
@@ -73,7 +73,7 @@ export const createBooking = async (userId: string, classId: string): Promise<IB
 export const cancelBooking = async (userId: string, classId: string): Promise<void> => {
   const fitnessClass = await FitnessClass.findById(classId);
   if (fitnessClass?.status === 'cancelled') {
-    throw new BookingError('Cancelled classes cannot have their booking cancelled', 409);
+    throw new BookingError('Cancelled items cannot have their booking cancelled', 409);
   }
   const booking = await Booking.findOne({ user: userId, fitnessClass: classId, status: 'booked' });
   if (!booking) {
