@@ -259,7 +259,7 @@ const InstructorClassManagementScreen = () => {
               blurOnSubmit={false}
               onFocus={() => setTimeout(() => formScrollRef.current?.scrollToEnd({ animated: true }), 250)}
             />
-            <Pressable style={styles.saveButton} onPress={saveClass}><Text style={styles.buttonText}>{editing ? 'Save Changes' : 'Create Class'}</Text></Pressable>
+            <Pressable style={styles.saveButton} onPress={saveClass}><Text style={styles.buttonText}>{editing ? 'Save Changes' : 'Create Item'}</Text></Pressable>
             <Pressable onPress={() => { setEditing(null); setForm(emptyForm); setFormVisible(false); setError(null); }}><Text style={styles.dismiss}>Cancel</Text></Pressable>
           </ScrollView>
           </View></View>
