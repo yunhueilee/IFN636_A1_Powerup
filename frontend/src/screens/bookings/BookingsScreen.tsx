@@ -64,7 +64,7 @@ const BookingsScreen = () => {
       <Text style={styles.header}>Booked Items</Text>
 
       {isLoading ? (
-        <LoadingState message="Loading bookings…" />
+        <LoadingState message="Loading items…" />
       ) : error ? (
         <ErrorState message={error} />
       ) : (

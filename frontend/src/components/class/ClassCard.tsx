@@ -79,7 +79,7 @@ const ClassCard = ({
             <ActivityIndicator color="#ffffff" size="small" />
           ) : (
             <Text style={styles.buttonText}>
-              {fitnessClass.isBooked ? 'Cancel Booking' : isFull ? 'Class Full' : 'Book Item'}
+              {fitnessClass.isBooked ? 'Cancel Booking' : isFull ? 'Item Full' : 'Book Item'}
             </Text>
           )}
         </Pressable>
